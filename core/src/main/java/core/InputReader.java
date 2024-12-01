@@ -14,4 +14,17 @@ public class InputReader {
         }
         return result;
     }
+
+    public static int[][] readInputAsInt(String filePath) throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get(filePath));
+        int[][] result = new int[lines.size()][];
+        for (int i = 0; i < lines.size(); i++) {
+            String[] parts = lines.get(i).split("\\s+");
+            result[i] = new int[parts.length];
+            for (int j = 0; j < parts.length; j++) {
+                result[i][j] = Integer.parseInt(parts[j]);
+            }
+        }
+        return result;
+    }
 }
