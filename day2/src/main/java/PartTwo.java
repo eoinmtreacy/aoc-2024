@@ -9,10 +9,11 @@ public class PartTwo {
     } 
 
     private static int isSafe(int[] line) {
-        // for (int num: line) System.out.print(num + " ");
+        for (int num: line) System.out.print(num + " ");
 
-        if (isAscending(line) || isDescending(line)) {
-            System.out.println(" - safe");
+        if (safeUp(line) || safeDown(line)) {
+            // System.out.println(" - safe");
+            System.out.println();
             return 1;
         }
         else {
@@ -27,45 +28,60 @@ public class PartTwo {
         for (int i = 1; i < line.length; i++) {
             result[i - 1] = line[i] - curr;
             curr = line[i];
-            System.out.print(result[i - 1] + " ");
         }
-        System.out.println();
         return result;
     }
 
-    private static boolean isAscending (int[] intervals) {
+    private static boolean safeUp (int[] intervals) {
+        // System.out.print("Safe up? ");
         boolean chance = true;
-        for (int i = 0; i < intervals.length - 1; i++) {
-            if (intervals[i + 1] <= 0 || intervals[i + 1] > 3) {
+        if (intervals[0] <= 0 || intervals[0] > 3) {
+            chance = false;
+        }
+        for (int i = 1; i < intervals.length - 1; i++) {
+            // System.out.println("interval: " + intervals[i] + "chance: " + chance); 
+            if (intervals[i] <= 0 || intervals[i] > 3) {
                 if (chance) {
                     chance = false;
-                    int sum = intervals[i] + intervals [i + 1];
-                    if (sum <= 0 || sum > 3) {
-                        return false;
-                    }
+                    int newDiff = intervals[i] + intervals[i - 1];
+                    if (newDiff <= 0 || newDiff > 3) return false;
                 } else {
                     return false;
                 }
             }
+
+
+        }
+        if (intervals[intervals.length - 1] <= 0 || intervals[intervals.length - 1] > 3) {
+                if (!chance) return false;
         }
         return true;
     }
 
-    private static boolean isDescending (int[] intervals) {
+    private static boolean safeDown (int[] intervals) {
+        // System.out.print("Safe down? ");
         boolean chance = true;
-        for (int i = 0; i < intervals.length - 1; i++) {
-            if (intervals[i + 1] >= 0 || intervals[i + 1] < -3) {
+        if (intervals[0] >= 0 || intervals[0] < -3) {
+            chance = false;
+        }
+        for (int i = 1; i < intervals.length - 1; i++) {
+            // System.out.println("interval: " + intervals[i] + "chance: " + chance); 
+            if (intervals[i] >= 0 || intervals[i] < -3) {
                 if (chance) {
                     chance = false;
-                    int sum = intervals[i] + intervals [i + 1];
-                    if (sum >= 0 || sum < -3) {
-                        return false;
-                    }
+                    int newDiff = intervals[i] + intervals[i - 1];
+                    if (newDiff >= 0 || newDiff < -3) return false;
                 } else {
                     return false;
                 }
             }
         }
+        if (intervals[intervals.length - 1] >= 0 || intervals[intervals.length - 1] < -3) {
+                if (!chance) return false;
+        }
         return true;
     }
+
+
+
 }
