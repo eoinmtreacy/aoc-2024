@@ -3,13 +3,11 @@ import java.util.Arrays;
 public class PartOne {
     public static int main(int[][] input) {
         return Arrays.stream(input)
-                    // .parallel()
                     .mapToInt(line -> isSafe(line))
                     .sum();
     } 
 
     private static int isSafe(int[] line) {
-        for (int num: line) System.out.print(num + " ");
         if (isAscending(line) || isDescending(line)) {
             return 1;
         }
