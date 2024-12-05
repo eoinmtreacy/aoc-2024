@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import core.InputReader;
 
 public class InputReaderTest {
@@ -21,5 +23,11 @@ public class InputReaderTest {
             for (int i : row) System.out.print(i + " ");
             System.out.println();
         }
+    }
+
+    @Test 
+    public void testReadTwoChunks() throws IOException {
+        ArrayList<ArrayList<int[]>> chunks = InputReader.readTwoChunks("src/test/resources/chunk.txt");
+        System.out.println(chunks.get(1));
     }
 }

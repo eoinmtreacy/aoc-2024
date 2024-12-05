@@ -36,7 +36,6 @@ public class InputReader {
         int i = 0;
         ArrayList<int[]> rules = new ArrayList<>();
         while (!lines.get(i).equals("")) {
-            System.out.println(lines.get(i));
             String[] parts = lines.get(i).split("\\|");
             int[] partsInts = new int[parts.length];
             for (int j = 0; j < parts.length; j++) {
