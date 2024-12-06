@@ -20,18 +20,51 @@ public class PartTwo {
         ROW = input.length;
         COL = input.length;
         findStart(input);
-        obstacles = new boolean[ROW][COL];
+        boolean [][] visited = new boolean[ROW][COL];
         int result = 0;
 
-        System.out.println(loops(pos[0], pos[1], idx, input));
+        while(pos[0] > -1 && pos[1] > -1 && pos[0] < ROW && pos[1] < COL) {
+            // System.out.println(pos[0] + " " + pos[1]);
+            // if (visited[pos[0]][pos[1]] == false) {
+            //     result++;
+            //     visited[pos[0]][pos[1]] = true;
+            // }
+
+            if (loops(pos[0], pos[1], idx, input)) result++;
+
+            int dR = DIRECTIONS[idx][0];
+            int dC = DIRECTIONS[idx][1];
+            int r = pos[0] + dR;
+            int c = pos[1] + dC;
+            if (r > -1 && c > - 1 && r < ROW && c < COL) {
+                if (input[r][c] == '.') {
+                    pos[0] += dR;
+                    pos[1] += dC;
+                } else {
+                    while(input[r][c] == '#') {
+                        idx = (idx + 1) % 4;
+                        dR = DIRECTIONS[idx][0];
+                        dC = DIRECTIONS[idx][1];
+                        r = pos[0] + dR;
+                        c = pos[1] + dC;
+                    }
+                    pos[0] += dR;
+                    pos[1] += dC;
+                }
+            } else break;
+        }
 
         return result;
     }
 
     private static boolean loops(int r, int c, int idx, char[][] input) {
+        System.out.println("Checking "  + r + " " + c + " " + DIRECTIONS[idx][0] + " " + DIRECTIONS[idx][1]);
         boolean [][][] visited = new boolean[ROW][COL][4];
+        visited[r][c][idx] = true;
+        idx = (idx + 1) % 4;
 
         while(r > - 1 && c > -1 && r < ROW && c < COL) {
+            System.out.println("moving "  + r + " " + c + " " + DIRECTIONS[idx][0] + " " + DIRECTIONS[idx][1]);
             if (visited[r][c][idx]) return true;
 
             visited[r][c][idx] = true;
@@ -47,8 +80,8 @@ public class PartTwo {
                 } else {
                     while(input[pR][pC] == '#') {
                         idx = (idx + 1) % 4;
-                        pR += DIRECTIONS[idx][0];
-                        pC += DIRECTIONS[idx][1];
+                        pR = r + DIRECTIONS[idx][0];
+                        pC = c +  DIRECTIONS[idx][1];
                     }
                     r = pR;
                     c = pC;

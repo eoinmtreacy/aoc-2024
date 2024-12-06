@@ -23,6 +23,7 @@ public class PartTwoTest {
     //     try {
     //         char[][] input = InputReader.readInput("src/test/resources/input.txt");
     //         System.out.println(PartTwo.main(input));
+    //         // 1413 too high
     //     } catch (Exception e) {
     //         e.printStackTrace();
     //     }
