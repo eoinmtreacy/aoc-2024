@@ -1,6 +1,6 @@
 from typing import List
 
-with open('day11.sample', 'r') as file:
+with open('day11.input', 'r') as file:
     input = [line.split() for line in file][0]
 
 def transform(stone: str) -> List[str]:
@@ -17,25 +17,14 @@ def transform(stone: str) -> List[str]:
     
     return stones
 
-def dfs(stones: str, count: int) -> List[str]:
-    global cache
-    if count > 24:
-        return stones
-    else:
-        result = []
-        for stone in stones:
-            inter = transform(stone)
-            result += dfs(inter, count + 1)
+def dfs(stone, depth = 0, cache = dict()):
+    if depth > 74:
+        return 1
+    if cache.get(stone) == None:
+        cache[stone] = {}
+    if cache.get(stone).get(depth) == None:
+        result = sum([dfs(s, depth + 1, cache) for s in transform(stone)]) 
+        cache[stone][depth] = result
+    return cache.get(stone).get(depth)
 
-        return result
-
-result = []
-cache: dict = {}
-
-for i in input:
-    result += dfs([i], 0)
-
-print(len(result))
-
-
-
+print(sum([dfs(stone) for stone in input]))
