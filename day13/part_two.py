@@ -1,26 +1,19 @@
 import re
 from typing import List
 
-with open('day13.sample', 'r') as file:
+with open('day13.input', 'r') as file:
     input = [re.findall("[0-9]+", str(line)) for line in file]
 
-def dot(m1: List[List[float]], m2: List[float]) -> List[float]:
-    result = []
-    for row in m1:
-        inter = 0
-        for i in range(len(row)):
-            inter += row[i] * m2[i]     
-        result.append(int(inter))
-    return result
+def dot(v1: List[List[int]], v2: List[List[int]]) -> List[int]:
+    return [sum([v1[i][j] * v2[j]  for j in range(len(v1[i]))]) for i in range(len(v1))]
 
-def gcd(a: int, b: int) -> int | None:
-    n = 1
-    while min(a,b) / n > 1:
-        if max(a,b) % (min(a,b) / n) == 0:
-            return  int(min(a, b) / n)
-        n += 1
-    return 1
-
+def solve_linear_eq(M: List[List[int]], v: List[int]):
+    det = M[0][0] * M[1][1] - M[0][1] * M[1][0]
+    M[0][0], M[1][1] = M[1][1], M[0][0]
+    M[0][1] *= -1
+    M[1][0] *= -1
+    return dot([[1 / det * each for each in col] for col in M], v)
+    
 
 result = 0
 
@@ -31,33 +24,15 @@ while i < len(input):
         i += 1
         continue
 
-    v1 = [int(char) for char in input[i]]
+    v1 = aX, aY = [int(char) for char in input[i]]
     i += 1
-    v2 = [int(char) for char in input[i]]
+    v2 = bX, bY = [int(char) for char in input[i]]
     i += 1
-    C = [int(char) for char in input[i]]
+    C = targetX, targetY = [int(char) + 10000000000000 for char in input[i]]
     i += 1
 
-    if C[0] % gcd(v1[0], v2[0]) != 0 or C[1] % gcd(v1[1], v2[1]) != 0:
-        continue
-    
-    print("something")
-    M = [v1, v2] # vector 
-
-    inverse_m = [ [(1 / (v1[0] * v2[1] - v1[1] * v2[0])) * c for c in v] for v in [[v2[1], -v1[1]], [-v2[0], v1[0]]]]
-    countA, countB = dot(inverse_m, C)
-    print(countA, countB)
-    
-    aX, aY = v1
-    bX, bY = v2
-    targetX, targetY = C
-
-    currX = countA * aX + countB * bX
-    currY = countA * aY + countB * bY
-
-    print(gcd(aX, bX))
-
-    # break
-
+    A, B = solve_linear_eq([[aX, bX], [aY, bY]], C)
+    if round(A) * aX + round(B) * bX == targetX and round(A) * aY + round(B) * bY == targetY:
+        result += 3 * round(A) + round(B)
 
 print(result)

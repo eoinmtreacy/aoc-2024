@@ -1,6 +1,6 @@
 import re 
 
-with open('day13.sample', 'r') as file:
+with open('day13.input', 'r') as file:
     input = [re.findall("[0-9]+", str(line)) for line in file]
 
 result = 0
@@ -24,10 +24,8 @@ while i < len(input):
 
     currX, currY = bX * countB, bY * countB
 
-    # print(currX, currY, targetX, targetY, aX, aY, bX, bY)
     seen = set()
     while (currX != targetX or currY != targetY) and (-1 < countA < 101 and countB > -1):
-        # print(currX, currY, targetX, targetY, countA, countB)
         if currX > targetX or currY > targetY:
             currX -= bX
             currY -= bY
@@ -41,7 +39,6 @@ while i < len(input):
             break
         seen.add((countA, countB))
 
-    # print(currX, currY, targetX, targetY, countA, countB) 
     if currX == targetX and currY == targetY and (-1 < countA < 101 or countB > -1):
         result += countA * 3 + countB
 
