@@ -1,4 +1,4 @@
-with open('day15.sample3', 'r') as file:
+with open('day15.input', 'r') as file:
     input = file.read()
     grid, moves = input.split("\n\n")
 
@@ -28,40 +28,53 @@ for i in range(ROWS):
             r, c = i, j
             grid[i][j] = '.'
     print()
-        
+print()
+
 for m in moves:
     dr, dc = dir[m]
     pr, pc = r + dr, c + dc
 
+
     if grid[pr][pc] == '#':
         continue
 
-    elif grid[pr][pc] == '.':
-        r += dr
-        c += dc
+    if grid[pr][pc] == '.':
+        r = pr
+        c = pc
         continue
+    
+    def canMove(r, c, movers = []):
+        if grid[r][c] == '#': return False
+        if grid[r][c] == '.': return True
 
-    # horizontal movement
-    if dr == 0:
-        while grid[pr][pc] != '#' and grid[pr][pc] != '.':
-            pr += dr
-            pc += dc
-        
-        if grid[pr][pc] == '.':
-            if dc < 0: # pushing left
-                grid[pr][pc : c] = grid[pr][pc + 1: c + 1]
+        movers.append((r,c, grid[r][c]))
+        if dr != 0: # moving vertically 
+            if grid[r][c] == ']':
+                nr, nc = r, c - 1
             else:
-                grid[pr][c + dc + 1 : pc + 1] = grid[pr][c + dc : pc]
-                grid[pr][c + dc] = '.'
-            r += dr
-            c += dc
-    # break
+                nr, nc = r, c + 1
+            
+            movers.append((nr, nc, grid[nr][nc]))
+
+            return canMove(r + dr, c + dc, movers) and canMove(nr + dr, nc + dc, movers)
+        else:
+            return canMove(r + dr, c + dc, movers)
+            
+    c2m = []
+    if canMove(pr, pc, c2m):
+        for r, c, _ in c2m:
+            grid[r][c] = '.'
+        for r, c, symbol in c2m:
+            grid[r + dr][c + dc] = symbol
+
+        r = pr
+        c = pc
 
 result = 0
 for r in range(ROWS):
     for c in range(COLS):
         print(grid[r][c], end='')
-        if grid[r][c] == 'O':
+        if grid[r][c] == '[':
             result += c + 100 * r
     print()
 
